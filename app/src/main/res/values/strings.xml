@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ProjetoMobileDb1Teste</string>
+    <string name="card_principal">dd/mm/aaaa \n US$##,##</string>
+    <string name="refresh">Refresh</string>
+</resources>
