@@ -1,5 +1,6 @@
 package com.example.projetomobiledb1teste.view;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
     private MainActivityPresenter presenter;
     public GraphView grafico;
     public TextView cardPrincipal;
+    private static final String formatoData = "dd/MM/yyyy";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +43,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
 
     @Override
     public void updateScreen(int data, double valor, LineGraphSeries<DataPoint> dataPoint) {
-        final DecimalFormat df = new DecimalFormat("US$#.00");
+        final String dolarFormat = "US$#.00";
+        final DecimalFormat df = new DecimalFormat(dolarFormat);
         final DateFormat dateFormat = new DateFormat();
 
         //define limites do eixo x
@@ -50,13 +53,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
         grafico.getViewport().setMinX(data -30*24*60*60);
 
         // coloca texto no card principal
-        String cardPrincipalText =""+dateFormat.format("dd/MM/yyyy",new Date ((long)data*1000))+"\n"+df.format(valor);
+
+        String cardPrincipalText =""+dateFormat.format(formatoData,new Date ((long)data*1000))+"\n"+df.format(valor);
         cardPrincipal.setText(cardPrincipalText);
 
         //ajusta formato do texto nos eixos
         GridLabelRenderer mGrid = grafico.getGridLabelRenderer();
+
+        mGrid.setHumanRounding(false,true);
         mGrid.setHorizontalLabelsAngle(90);
         mGrid.setNumHorizontalLabels(11);
+        mGrid.setNumVerticalLabels(8);
         mGrid.setLabelHorizontalHeight(200);
         mGrid.setLabelVerticalWidth(200);
 
@@ -64,8 +71,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
             @Override
             public String formatLabel(double value, boolean isValueX) {
                 if (isValueX){
-                    String teste = ""+ dateFormat.format("dd/MM/yyyy",new Date((long)value*1000));
-                    return teste;
+                    return ""+ dateFormat.format(formatoData,new Date((long)value*1000));
                 }else{
                     return ""+df.format(value);
                 }
@@ -78,10 +84,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
         mGrid.setLabelFormatter(mLabelFormater);
 
         //desenha grafico
+
         grafico.addSeries(dataPoint);
+        dataPoint.setColor(Color.DKGRAY);
         dataPoint.setDrawDataPoints(true);
-        grafico.setTitle("Cotação dos ultimos 30 dias");
-        grafico.setTitleTextSize(75);
+
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
 
         switch (itemId) {
             case R.id.action_refresh:
-                cardPrincipal.setText("Por favor \n Aguarde");
+                cardPrincipal.setText(R.string.wait_message);
                 grafico.removeAllSeries();
                 presenter.refresh();
                 return true;

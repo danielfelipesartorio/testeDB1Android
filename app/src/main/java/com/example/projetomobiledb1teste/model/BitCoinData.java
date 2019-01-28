@@ -4,13 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.example.projetomobiledb1teste.presenter.MainActivityPresenter;
 import com.example.projetomobiledb1teste.utilities.DbHelper;
 import com.example.projetomobiledb1teste.utilities.NetWorkUtilities;
 import com.example.projetomobiledb1teste.utilities.bitcoinContract;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,13 +18,12 @@ import java.io.IOException;
 
 import java.net.URL;
 
-
 public class BitCoinData {
-    private static final String TAG = BitCoinData.class.getSimpleName();
-    private String timespan = "30days";
+    private String timespan = "31days";
     private SQLiteDatabase mDBData;
     private DbHelper dbHelper;
     public Context mContext;
+
 
     URL urlBitCoin = NetWorkUtilities.buildUrl("https://api.blockchain.info/charts/market-price?timespan=" + timespan);
     public int[] dia;
@@ -64,11 +61,10 @@ public class BitCoinData {
                     null,
                     null,
                     null,null);
-
-
             int size = cursor.getCount();
             valor = new double[size];
             cursor.moveToFirst();
+
             for (int i=0;i<size;i++){
                 valor[i] = cursor.getFloat(cursor.getColumnIndex(bitcoinContract.bitCoinEntry.COLUMN_VALOR));
                 cursor.moveToNext();
@@ -122,28 +118,23 @@ public class BitCoinData {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             try {
-            int count = 0;
-            int tam = dadosJson.length();
+                int count = 0;
+                int tam = dadosJson.length();
                 dia = new int[tam];
                 valor = new double[tam];
-
-
-
-            for (count= 0;count<tam;count++) {
-                JSONObject jsonLineItem = (JSONObject) dadosJson.getJSONObject(count);
-                dia[count] = jsonLineItem.getInt("x");
-                valor[count] = jsonLineItem.getDouble("y");
-                ContentValues cv = new ContentValues();
-                cv.put(bitcoinContract.bitCoinEntry.COLUMN_DATA,dia[count]);
-                cv.put(bitcoinContract.bitCoinEntry.COLUMN_VALOR,valor[count]);
-                mDBData.insert(bitcoinContract.bitCoinEntry.TABLE_NAME,null,cv);
-            }
+                for (count= 0;count<tam;count++) {
+                    JSONObject jsonLineItem = (JSONObject) dadosJson.getJSONObject(count);
+                    dia[count] = jsonLineItem.getInt("x");
+                    valor[count] = jsonLineItem.getDouble("y");
+                    ContentValues cv = new ContentValues();
+                    cv.put(bitcoinContract.bitCoinEntry.COLUMN_DATA,dia[count]);
+                    cv.put(bitcoinContract.bitCoinEntry.COLUMN_VALOR,valor[count]);
+                    mDBData.insert(bitcoinContract.bitCoinEntry.TABLE_NAME,null,cv);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             presenterForMain.updateData(mContext);
         }
     }
@@ -154,7 +145,6 @@ public class BitCoinData {
                 bitcoinContract.bitCoinEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 bitcoinContract.bitCoinEntry.COLUMN_DATA + " INTEGER NOT NULL," +
                 bitcoinContract.bitCoinEntry.COLUMN_VALOR + " REAL NOT NULL" + ");";
-
         mDBData.execSQL(SQL_CREATE_TABLE);
     }
 }

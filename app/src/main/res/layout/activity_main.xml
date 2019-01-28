@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFA5D6A7"
+    android:background="#2F4F4F"
     android:orientation="vertical">
 
 
@@ -11,18 +10,35 @@
         android:id="@+id/card_principal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@android:color/background_light"
+        android:layout_margin="4dp"
+        android:background="@drawable/borda"
         android:gravity="center"
         android:text="@string/card_principal"
         android:textColor="@android:color/black"
         android:textSize="40sp" />
 
-    <com.jjoe64.graphview.GraphView
-        android:id="@+id/grafico"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/borda"
+        android:layout_margin="4dp">
+
+        <TextView
+            android:id="@+id/titulo_grafico"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/graph_title"
+            android:textColor="@android:color/black"
+            android:textSize="30sp"
+            android:paddingBottom="10dp"/>
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/grafico"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 
 </LinearLayout>
