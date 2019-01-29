@@ -8,9 +8,9 @@ import android.util.Log;
 
 import com.example.projetomobiledb1teste.BitCoinPair;
 import com.example.projetomobiledb1teste.BitCoinPairList;
+import com.example.projetomobiledb1teste.CallbackInterface;
 import com.example.projetomobiledb1teste.GetBitCoinDataService;
 import com.example.projetomobiledb1teste.RetrofitInstanceBitCoin;
-import com.example.projetomobiledb1teste.presenter.MainActivityPresenter;
 import com.example.projetomobiledb1teste.utilities.DbHelper;
 import com.example.projetomobiledb1teste.utilities.NetWorkUtilities;
 import com.example.projetomobiledb1teste.utilities.BitCoinContract;
@@ -29,29 +29,31 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class BitCoinData {
-    private String timespan = "31days";
+    //private String timespan = "31days";
     private SQLiteDatabase mDBData;
     private DbHelper dbHelper;
-    private Context mContext;
-    private boolean sucsses;
+    private boolean success;
+    private CallbackInterface callback;
+    private Context appContext;
 
-    private URL urlBitCoin = NetWorkUtilities.buildUrl("https://api.blockchain.info/charts/market-price?timespan=" + timespan);
+
+   // private URL urlBitCoin = NetWorkUtilities.buildUrl("https://api.blockchain.info/charts/market-price?timespan=" + timespan);
     private int[] dia;
     private float[] valor;
-    private MainActivityPresenter presenterForMain;
 
+/*
+    public boolean getDataFromAPI(CallbackInterface callbackInterface)  {
+        callback = callbackInterface;
 
-    public boolean getDataFromAPI(Context context, MainActivityPresenter presenter) {
-        mContext = context;
-        presenterForMain = presenter;
-        DbHelper mDBHelper = new DbHelper(context);
-        mDBData = mDBHelper.getReadableDatabase();
+        DbHelper mDBHelper = new DbHelper(appContext);
+        mDBData = mDBHelper.getWritableDatabase();
 
         Cursor cursor = mDBData.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='"+ BitCoinContract.bitCoinEntry.TABLE_NAME+"';",null);
         if(cursor.getCount()>0){
             cursor = mDBData.rawQuery("SELECT * FROM " + BitCoinContract.bitCoinEntry.TABLE_NAME, null);
             if (cursor.moveToFirst()) {
-                presenterForMain.updateData(mContext);
+                callback.callback(true);
+                //presenterForMain.updateData();
             } else {
                 new bitCoinAsyncTask().execute(urlBitCoin);
             }
@@ -61,12 +63,13 @@ public class BitCoinData {
         }
         cursor.close();
 
-        return sucsses;
+        return success;
     }
+    */
 
-    public float[] getValor(Context context){
+    public float[] getValue(){
         if (valor ==null){
-            dbHelper = new DbHelper(context);
+            dbHelper = new DbHelper(appContext);
             mDBData= dbHelper.getReadableDatabase();
             Cursor cursor = mDBData.query(BitCoinContract.bitCoinEntry.TABLE_NAME,
                     new String[] {BitCoinContract.bitCoinEntry.COLUMN_VALOR},
@@ -87,9 +90,9 @@ public class BitCoinData {
         return valor;
     }
 
-    public int[] getDia(Context context){
+    public int[] getDate(){
         if (dia ==null){
-            dbHelper = new DbHelper(context);
+            dbHelper = new DbHelper(appContext);
             mDBData= dbHelper.getReadableDatabase();
             Cursor cursor = mDBData.query(BitCoinContract.bitCoinEntry.TABLE_NAME,
                     new String[] {BitCoinContract.bitCoinEntry.COLUMN_DATA},
@@ -128,10 +131,10 @@ public class BitCoinData {
             JSONArray dadosJson = null;
 
             if (jsonString ==null){
-                sucsses = false;
+                success = false;
                 return;
             }else{
-                sucsses =true;
+                success =true;
             }
             try {
                 dadosJson = jsonString.getJSONArray("values");
@@ -155,7 +158,8 @@ public class BitCoinData {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            presenterForMain.updateData(mContext);
+            callback.callback(true);
+            //presenterForMain.updateData();
             Log.v("teste","acesso a internet");
 
         }
@@ -170,7 +174,9 @@ public class BitCoinData {
         mDBData.execSQL(SQL_CREATE_TABLE);
     }
 
-    public void getDataFromAPIUsingRetofit (){
+    public void getDataFromAPIUsingRetofit (Context appContext, CallbackInterface callbackInterface){
+        this.appContext = appContext;
+        callback = callbackInterface;
         GetBitCoinDataService bitCoinDataService = RetrofitInstanceBitCoin.getRetrofitInstance().create(GetBitCoinDataService.class);
 
         Call<BitCoinPairList> call = bitCoinDataService.getBitCoinData();
@@ -179,11 +185,12 @@ public class BitCoinData {
             @Override
             public void onResponse(Call<BitCoinPairList> call, Response<BitCoinPairList> response) {
                 generateDataBase(response.body().getBitCoinPairList());
+                callback.callback(true);
             }
 
             @Override
             public void onFailure(Call<BitCoinPairList> call, Throwable t) {
-
+                callback.callback(false);
             }
         });
 
@@ -192,19 +199,25 @@ public class BitCoinData {
         int date;
         float value;
 
-        dbHelper = new DbHelper(null);
+        dbHelper = new DbHelper(appContext);
         mDBData= dbHelper.getWritableDatabase();
 
-        int tam = bitCoinPairArrayList.size();
+        Cursor cursor = mDBData.rawQuery("SELECT * FROM " + BitCoinContract.bitCoinEntry.TABLE_NAME, null);
+        if (!cursor.moveToFirst()){
+            int tam = bitCoinPairArrayList.size();
 
-        for (int count= 0;count<tam;count++) {
-            date = bitCoinPairArrayList.get(count).getDate();
-            value = bitCoinPairArrayList.get(count).getValue();
-            ContentValues cv = new ContentValues();
-            cv.put(BitCoinContract.bitCoinEntry.COLUMN_DATA,date);
-            cv.put(BitCoinContract.bitCoinEntry.COLUMN_VALOR,value);
-            mDBData.insert(BitCoinContract.bitCoinEntry.TABLE_NAME,null,cv);
+            for (int count= 0;count<tam;count++) {
+                date = bitCoinPairArrayList.get(count).getDate();
+                value = bitCoinPairArrayList.get(count).getValue();
+                ContentValues cv = new ContentValues();
+                cv.put(BitCoinContract.bitCoinEntry.COLUMN_DATA,date);
+                cv.put(BitCoinContract.bitCoinEntry.COLUMN_VALOR,value);
+                mDBData.insert(BitCoinContract.bitCoinEntry.TABLE_NAME,null,cv);
+            }
+        }else{
+            return;
         }
+
     }
 
 }

@@ -1,5 +1,7 @@
 package com.example.projetomobiledb1teste.view;
 
+import android.app.Application;
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import com.example.projetomobiledb1teste.MVPInterfaces;
 import com.example.projetomobiledb1teste.R;
 import com.example.projetomobiledb1teste.presenter.MainActivityPresenter;
+import com.example.projetomobiledb1teste.utilities.DbHelper;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.LabelFormatter;
@@ -29,18 +32,27 @@ public class MainActivity extends AppCompatActivity implements MVPInterfaces.Mai
     public TextView mTextViewMainCardDate;
     public TextView mTextViewMainCardValue;
     private static final String formatoData = "dd/MM/yyyy";
+    private static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        context = getApplicationContext();
+
         mTextViewMainCardDate = (TextView) findViewById(R.id.card_principal_data);
         mTextViewMainCardValue = (TextView) findViewById(R.id.card_principal_valor);
         grafico = (GraphView) findViewById(R.id.grafico);
         presenter = new MainActivityPresenter(this);
 
-        presenter.pegaDados(this);
+        presenter.pegaDados();
+
+
+    }
+
+    public static Context getContext(){
+        return context;
     }
 
     @Override
