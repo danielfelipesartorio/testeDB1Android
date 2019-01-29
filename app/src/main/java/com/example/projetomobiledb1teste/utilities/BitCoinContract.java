@@ -2,7 +2,7 @@ package com.example.projetomobiledb1teste.utilities;
 
 import android.provider.BaseColumns;
 
-public class bitcoinContract {
+public class BitCoinContract {
 
     public static final class bitCoinEntry implements BaseColumns{
         public static final String TABLE_NAME = "bitCoin";

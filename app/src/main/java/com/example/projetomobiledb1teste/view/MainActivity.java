@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
+import com.example.projetomobiledb1teste.MVPInterfaces;
 import com.example.projetomobiledb1teste.R;
 import com.example.projetomobiledb1teste.presenter.MainActivityPresenter;
 import com.jjoe64.graphview.GraphView;
@@ -21,10 +23,11 @@ import java.text.DecimalFormat;
 import java.util.Date;
 
 
-public class MainActivity extends AppCompatActivity implements MainActivityPresenter.Contrato {
+public class MainActivity extends AppCompatActivity implements MVPInterfaces.MainActivityInterface {
     private MainActivityPresenter presenter;
     public GraphView grafico;
-    public TextView cardPrincipal;
+    public TextView mTextViewMainCardDate;
+    public TextView mTextViewMainCardValue;
     private static final String formatoData = "dd/MM/yyyy";
 
     @Override
@@ -32,13 +35,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        cardPrincipal = (TextView) findViewById(R.id.card_principal);
+        mTextViewMainCardDate = (TextView) findViewById(R.id.card_principal_data);
+        mTextViewMainCardValue = (TextView) findViewById(R.id.card_principal_valor);
         grafico = (GraphView) findViewById(R.id.grafico);
-
         presenter = new MainActivityPresenter(this);
 
         presenter.pegaDados(this);
-
     }
 
     @Override
@@ -54,8 +56,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
 
         // coloca texto no card principal
 
-        String cardPrincipalText =""+dateFormat.format(formatoData,new Date ((long)data*1000))+"\n"+df.format(valor);
-        cardPrincipal.setText(cardPrincipalText);
+        String cardPrincipalText ="Data: "+dateFormat.format(formatoData,new Date ((long)data*1000));
+        mTextViewMainCardDate.setText(cardPrincipalText);
+        String cardPrincipalValue = "Valor do BitCoin: "+df.format(valor);
+        mTextViewMainCardValue.setText(cardPrincipalValue);
 
         //ajusta formato do texto nos eixos
         GridLabelRenderer mGrid = grafico.getGridLabelRenderer();
@@ -98,16 +102,25 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        View activity_main = findViewById(R.id.activity_main);
         int itemId = item.getItemId();
 
         switch (itemId) {
             case R.id.action_refresh:
-                cardPrincipal.setText(R.string.wait_message);
+
+                boolean sucsses;
+
+                mTextViewMainCardDate.setText("");
+                mTextViewMainCardValue.setText("");
                 grafico.removeAllSeries();
                 presenter.refresh();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void semConexao(){
+        mTextViewMainCardDate.setText(getString(R.string.error_msg_1));
+        mTextViewMainCardValue.setText(getString(R.string.error_msg_2));
     }
 }
