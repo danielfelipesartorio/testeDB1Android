@@ -1,6 +1,5 @@
 package com.example.projetomobiledb1teste.presenter;
 
-import android.database.sqlite.SQLiteDatabase;
 
 import com.example.projetomobiledb1teste.CallbackInterface;
 import com.example.projetomobiledb1teste.MVPInterfaces;
@@ -14,7 +13,6 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 public class MainActivityPresenter implements CallbackInterface {
     private BitCoinData bitCoinData;
     private MVPInterfaces.MainActivityInterface contrato;
-    public SQLiteDatabase mDB;
 
     public MainActivityPresenter(MVPInterfaces.MainActivityInterface contrato){
         this.contrato = contrato;
@@ -25,7 +23,7 @@ public class MainActivityPresenter implements CallbackInterface {
         bitCoinData.getDataFromAPIUsingRetofit(MainActivity.getContext(), this);
     }
 
-    public void updateData(){
+    private void updateData(){
         float[] valor = bitCoinData.getValue();
         int[] data = bitCoinData.getDate();
 

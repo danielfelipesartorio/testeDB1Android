@@ -1,6 +1,5 @@
 package com.example.projetomobiledb1teste.view;
 
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -8,13 +7,13 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+
 import android.widget.TextView;
 
 import com.example.projetomobiledb1teste.MVPInterfaces;
 import com.example.projetomobiledb1teste.R;
 import com.example.projetomobiledb1teste.presenter.MainActivityPresenter;
-import com.example.projetomobiledb1teste.utilities.DbHelper;
+
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.LabelFormatter;
@@ -41,9 +40,9 @@ public class MainActivity extends AppCompatActivity implements MVPInterfaces.Mai
 
         context = getApplicationContext();
 
-        mTextViewMainCardDate = (TextView) findViewById(R.id.card_principal_data);
-        mTextViewMainCardValue = (TextView) findViewById(R.id.card_principal_valor);
-        grafico = (GraphView) findViewById(R.id.grafico);
+        mTextViewMainCardDate = findViewById(R.id.card_principal_data);
+        mTextViewMainCardValue = findViewById(R.id.card_principal_valor);
+        grafico = findViewById(R.id.grafico);
         presenter = new MainActivityPresenter(this);
 
         presenter.pegaDados();
@@ -59,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements MVPInterfaces.Mai
     public void updateScreen(int data, double valor, LineGraphSeries<DataPoint> dataPoint) {
         final String dolarFormat = "US$#.00";
         final DecimalFormat df = new DecimalFormat(dolarFormat);
-        final DateFormat dateFormat = new DateFormat();
 
         //define limites do eixo x
         grafico.getViewport().setXAxisBoundsManual(true);
@@ -68,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements MVPInterfaces.Mai
 
         // coloca texto no card principal
 
-        String cardPrincipalText ="Data: "+dateFormat.format(formatoData,new Date ((long)data*1000));
+        String cardPrincipalText ="Data: "+DateFormat.format(formatoData,new Date ((long)data*1000));
         mTextViewMainCardDate.setText(cardPrincipalText);
         String cardPrincipalValue = "Valor do BitCoin: "+df.format(valor);
         mTextViewMainCardValue.setText(cardPrincipalValue);
@@ -87,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements MVPInterfaces.Mai
             @Override
             public String formatLabel(double value, boolean isValueX) {
                 if (isValueX){
-                    return ""+ dateFormat.format(formatoData,new Date((long)value*1000));
+                    return ""+ DateFormat.format(formatoData,new Date((long)value*1000));
                 }else{
                     return ""+df.format(value);
                 }
@@ -114,13 +112,11 @@ public class MainActivity extends AppCompatActivity implements MVPInterfaces.Mai
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        View activity_main = findViewById(R.id.activity_main);
         int itemId = item.getItemId();
 
         switch (itemId) {
             case R.id.action_refresh:
 
-                boolean sucsses;
 
                 mTextViewMainCardDate.setText("");
                 mTextViewMainCardValue.setText("");

@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+
 
 import com.example.projetomobiledb1teste.BitCoinPair;
 import com.example.projetomobiledb1teste.BitCoinPairList;
@@ -12,16 +12,9 @@ import com.example.projetomobiledb1teste.CallbackInterface;
 import com.example.projetomobiledb1teste.GetBitCoinDataService;
 import com.example.projetomobiledb1teste.RetrofitInstanceBitCoin;
 import com.example.projetomobiledb1teste.utilities.DbHelper;
-import com.example.projetomobiledb1teste.utilities.NetWorkUtilities;
+
 import com.example.projetomobiledb1teste.utilities.BitCoinContract;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-
-import java.net.URL;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -32,7 +25,6 @@ public class BitCoinData {
     //private String timespan = "31days";
     private SQLiteDatabase mDBData;
     private DbHelper dbHelper;
-    private boolean success;
     private CallbackInterface callback;
     private Context appContext;
 
@@ -111,7 +103,7 @@ public class BitCoinData {
             cursor.close();
         }
         return dia;}
-
+/*
     public class bitCoinAsyncTask extends android.os.AsyncTask<URL,Void,JSONObject>{
         @Override
         protected JSONObject doInBackground(URL... urls) {
@@ -164,6 +156,7 @@ public class BitCoinData {
 
         }
     }
+    */
     public void droptable(){
         mDBData.execSQL("DROP TABLE IF EXISTS " + BitCoinContract.bitCoinEntry.TABLE_NAME + ";");
         final String SQL_CREATE_TABLE = "CREATE TABLE " +
@@ -214,10 +207,8 @@ public class BitCoinData {
                 cv.put(BitCoinContract.bitCoinEntry.COLUMN_VALOR,value);
                 mDBData.insert(BitCoinContract.bitCoinEntry.TABLE_NAME,null,cv);
             }
-        }else{
-            return;
         }
-
+        cursor.close();
     }
 
 }
