@@ -3,7 +3,7 @@ package com.example.projetomobiledb1teste;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +13,7 @@ import android.text.format.DateFormat;
 
 import java.sql.Date;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
+
 
 
 public class ValuesListAdapter extends RecyclerView.Adapter<ValuesListAdapter.MyViewHolder> {
@@ -55,6 +55,9 @@ public class ValuesListAdapter extends RecyclerView.Adapter<ValuesListAdapter.My
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         float temp;
+        if (value==null || date == null){
+            return;
+        }
         int size = value.length;
         int j = size-i-1;
 
@@ -93,6 +96,10 @@ public class ValuesListAdapter extends RecyclerView.Adapter<ValuesListAdapter.My
 
     @Override
     public int getItemCount() {
-        return date.length;
+        if (date==null){
+            return 0;
+        }else {
+            return date.length;
+        }
     }
 }

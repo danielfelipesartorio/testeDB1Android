@@ -2,7 +2,9 @@
 <GridLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/borda"
+    android:padding="8dp">
     <ImageView
         android:id="@+id/image_variation"
         android:layout_width="48dp"
@@ -26,7 +28,7 @@
             android:id="@+id/list_item_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:text="US$3000,00"/>
     </LinearLayout>
     <TextView
@@ -34,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="+10%"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:gravity="center"
         android:layout_gravity="end|center"/>
 

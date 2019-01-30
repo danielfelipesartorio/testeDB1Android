@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 
 import com.example.projetomobiledb1teste.BitCoinPair;
@@ -61,7 +62,7 @@ public class BitCoinData {
 
     public float[] getValue(){
         if (valor ==null){
-            dbHelper = new DbHelper(appContext);
+            dbHelper = DbHelper.getInstance(appContext);
             mDBData= dbHelper.getReadableDatabase();
             Cursor cursor = mDBData.query(BitCoinContract.bitCoinEntry.TABLE_NAME,
                     new String[] {BitCoinContract.bitCoinEntry.COLUMN_VALOR},
@@ -84,7 +85,7 @@ public class BitCoinData {
 
     public int[] getDate(){
         if (dia ==null){
-            dbHelper = new DbHelper(appContext);
+            dbHelper = DbHelper.getInstance(appContext);
             mDBData= dbHelper.getReadableDatabase();
             Cursor cursor = mDBData.query(BitCoinContract.bitCoinEntry.TABLE_NAME,
                     new String[] {BitCoinContract.bitCoinEntry.COLUMN_DATA},
@@ -158,6 +159,8 @@ public class BitCoinData {
     }
     */
     public void droptable(){
+        dbHelper = DbHelper.getInstance(appContext);
+        mDBData = dbHelper.getWritableDatabase();
         mDBData.execSQL("DROP TABLE IF EXISTS " + BitCoinContract.bitCoinEntry.TABLE_NAME + ";");
         final String SQL_CREATE_TABLE = "CREATE TABLE " +
                 BitCoinContract.bitCoinEntry.TABLE_NAME + " ("+
@@ -170,7 +173,7 @@ public class BitCoinData {
     public void getDataFromAPIUsingRetofit (Context appContext, CallbackInterface callbackInterface){
         this.appContext = appContext;
         callback = callbackInterface;
-        GetBitCoinDataService bitCoinDataService = RetrofitInstanceBitCoin.getRetrofitInstance().create(GetBitCoinDataService.class);
+        final GetBitCoinDataService bitCoinDataService = RetrofitInstanceBitCoin.getRetrofitInstance().create(GetBitCoinDataService.class);
 
         Call<BitCoinPairList> call = bitCoinDataService.getBitCoinData();
 
@@ -178,11 +181,13 @@ public class BitCoinData {
             @Override
             public void onResponse(Call<BitCoinPairList> call, Response<BitCoinPairList> response) {
                 generateDataBase(response.body().getBitCoinPairList());
+                Log.v("teste","onResponse");
                 callback.callback(true);
             }
 
             @Override
             public void onFailure(Call<BitCoinPairList> call, Throwable t) {
+                Log.v("teste","onFailure"+t.toString());
                 callback.callback(false);
             }
         });
@@ -192,7 +197,7 @@ public class BitCoinData {
         int date;
         float value;
 
-        dbHelper = new DbHelper(appContext);
+        dbHelper = DbHelper.getInstance(appContext);
         mDBData= dbHelper.getWritableDatabase();
 
         Cursor cursor = mDBData.rawQuery("SELECT * FROM " + BitCoinContract.bitCoinEntry.TABLE_NAME, null);

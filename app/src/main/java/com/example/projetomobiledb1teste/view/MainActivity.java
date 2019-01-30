@@ -2,13 +2,12 @@ package com.example.projetomobiledb1teste.view;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import android.view.View;
 import android.widget.TextView;
@@ -28,7 +27,6 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.text.DecimalFormat;
 import java.util.Date;
 
-
 public class MainActivity extends AppCompatActivity implements MVPInterfaces.MainActivityInterface {
     private MainActivityPresenter presenter;
     public GraphView grafico;
@@ -40,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements MVPInterfaces.Mai
     private RecyclerView mValuesList;
     private RecyclerView.Adapter mValuesListAdapter;
     private RecyclerView.LayoutManager mValuesListLayoutManager;
+    private SwipeRefreshLayout mSwipeRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +51,22 @@ public class MainActivity extends AppCompatActivity implements MVPInterfaces.Mai
         mTextViewMainCardValue = findViewById(R.id.card_principal_valor);
         grafico = findViewById(R.id.grafico);
         mValuesList = findViewById(R.id.values_list);
+
+
+        mSwipeRefresh = findViewById(R.id.swipe_refresh);
+        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mTextViewMainCardDate.setText("");
+                mTextViewMainCardValue.setText("");
+                mValuesListLayoutManager = new LinearLayoutManager(MainActivity.this);
+                mValuesList.setLayoutManager(mValuesListLayoutManager);
+                mValuesListAdapter = new ValuesListAdapter(null,null);
+                mValuesList.setAdapter(mValuesListAdapter);
+                grafico.removeAllSeries();
+                presenter.refresh();
+            }
+        });
 
         presenter = new MainActivityPresenter(this);
         presenter.pegaDados();
@@ -73,8 +88,6 @@ public class MainActivity extends AppCompatActivity implements MVPInterfaces.Mai
         mValuesListAdapter = new ValuesListAdapter(data,valor);
         mValuesList.setAdapter(mValuesListAdapter);
 
-
-
         // coloca texto no card principal
         String cardPrincipalText ="Data: "+DateFormat.format(formatoData,new Date ((long)data[dataSize-1]*1000));
         mTextViewMainCardDate.setText(cardPrincipalText);
@@ -91,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements MVPInterfaces.Mai
                     return ""+df.format(value);
                 }
             }
-
             @Override
             public void setViewport(Viewport viewport) {
             }
@@ -100,57 +112,27 @@ public class MainActivity extends AppCompatActivity implements MVPInterfaces.Mai
         GridLabelRenderer mGrid = grafico.getGridLabelRenderer();
         mGrid.setLabelFormatter(mLabelFormater);
 
-
-
-
         mGrid.setHumanRounding(false,true);
         mGrid.setHorizontalLabelsAngle(90);
-
         mGrid.setNumVerticalLabels(8);
-        mGrid.setLabelHorizontalHeight(200);
-        mGrid.setLabelVerticalWidth(200);
         mGrid.setNumHorizontalLabels(11);
 
         //desenha grafico
-
-
         dataPoint.setColor(Color.WHITE);
         dataPoint.setDrawDataPoints(true);
 
         //define limites do eixo x
-
         grafico.getViewport().setXAxisBoundsManual(true);
         grafico.getViewport().setMaxX(dataPoint.getHighestValueX());
         grafico.getViewport().setMinX(dataPoint.getLowestValueX());
         grafico.addSeries(dataPoint);
-        grafico.setSystemUiVisibility(View.GONE);
         grafico.setVisibility(View.VISIBLE);
-
+        mSwipeRefresh.setRefreshing(false);
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
 
-        switch (itemId) {
-            case R.id.action_refresh:
-
-
-                mTextViewMainCardDate.setText("");
-                mTextViewMainCardValue.setText("");
-                grafico.removeAllSeries();
-                presenter.refresh();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    @Override
     public void semConexao(){
         mTextViewMainCardDate.setText(getString(R.string.error_msg_1));
         mTextViewMainCardValue.setText(getString(R.string.error_msg_2));
+        mSwipeRefresh.setRefreshing(false);
     }
 }

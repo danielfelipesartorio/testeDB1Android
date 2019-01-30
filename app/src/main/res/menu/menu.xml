@@ -9,4 +9,14 @@
         android:title="@string/refresh"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_name"/>
+
+    <item
+        android:title="Timespan"/>
+
+    <item
+        android:title="RollingAvarege"/>
+    <group>
+        <item/>
+        <item/>
+    </group>
 </menu>

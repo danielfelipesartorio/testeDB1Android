@@ -8,7 +8,16 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "bitcoin2.db";
     private static final int DATABASE_VERSION = 1;
 
-    public DbHelper(Context context) {
+    private static DbHelper mInstance = null;
+
+    public static DbHelper getInstance(Context context){
+        if (mInstance==null){
+            mInstance = new DbHelper(context.getApplicationContext());
+        }
+        return mInstance;
+    }
+
+    private DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
