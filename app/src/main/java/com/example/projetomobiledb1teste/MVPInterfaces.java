@@ -5,7 +5,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 public interface MVPInterfaces {
     interface MainActivityInterface {
-        void updateScreen(int data,double valor, LineGraphSeries<DataPoint> dadosParaGrafico);
+        void updateScreen(int[] data,float[] valor, LineGraphSeries<DataPoint> dadosParaGrafico);
         void semConexao();
     }
 }

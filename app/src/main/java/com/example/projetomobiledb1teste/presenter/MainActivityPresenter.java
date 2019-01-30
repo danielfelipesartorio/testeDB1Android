@@ -36,7 +36,7 @@ public class MainActivityPresenter implements CallbackInterface {
         }
 
         LineGraphSeries<DataPoint> seriesParaDataPoint = new LineGraphSeries<>(dataPoint);
-        contrato.updateScreen(data[tamanho-1],valor[tamanho-1],seriesParaDataPoint);
+        contrato.updateScreen(data,valor,seriesParaDataPoint);
 
     }
 
