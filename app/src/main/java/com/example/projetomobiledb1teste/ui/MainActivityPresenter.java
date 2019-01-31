@@ -1,11 +1,7 @@
-package com.example.projetomobiledb1teste.presenter;
+package com.example.projetomobiledb1teste.ui;
 
 
-import com.example.projetomobiledb1teste.CallbackInterface;
-import com.example.projetomobiledb1teste.MVPInterfaces;
-import com.example.projetomobiledb1teste.model.BitCoinData;
-
-import com.example.projetomobiledb1teste.view.MainActivity;
+import com.example.projetomobiledb1teste.data.db.model.BitCoinData;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -20,12 +16,12 @@ public class MainActivityPresenter implements CallbackInterface {
     }
 
     public void pegaDados (){
-        bitCoinData.getDataFromAPIUsingRetofit(MainActivity.getContext(), this);
+        bitCoinData.getDataFromAPIUsingRetrofit(MainActivity.getContext(), this);
     }
 
     private void updateData(){
-        float[] valor = bitCoinData.getValue();
-        int[] data = bitCoinData.getDate();
+        float[] valor = bitCoinData.getValueFromDB();
+        int[] data = bitCoinData.getDateFromDB();
 
         int tamanho = data.length;
 
@@ -44,7 +40,7 @@ public class MainActivityPresenter implements CallbackInterface {
 
     public void refresh(){
         bitCoinData.droptable();
-        bitCoinData.getDataFromAPIUsingRetofit(MainActivity.getContext(), this);
+        bitCoinData.getDataFromAPIUsingRetrofit(MainActivity.getContext(), this);
     }
 
 

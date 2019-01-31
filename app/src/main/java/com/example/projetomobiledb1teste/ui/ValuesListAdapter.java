@@ -1,4 +1,4 @@
-package com.example.projetomobiledb1teste;
+package com.example.projetomobiledb1teste.ui;
 
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -11,31 +11,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.text.format.DateFormat;
 
+import com.example.projetomobiledb1teste.R;
+
 import java.sql.Date;
 import java.text.DecimalFormat;
-
-
 
 public class ValuesListAdapter extends RecyclerView.Adapter<ValuesListAdapter.MyViewHolder> {
         private int[] date;
         private float[] value;
-
-
-    public static class MyViewHolder extends RecyclerView.ViewHolder  {
-        public TextView mTextViewDate;
-        public TextView mTextViewValue;
-        public TextView mTextViewVariation;
-        public ImageView mImageVariation;
-
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            mTextViewDate = itemView.findViewById(R.id.list_item_date);
-            mTextViewValue = itemView.findViewById(R.id.list_item_value);
-            mTextViewVariation = itemView.findViewById(R.id.list_item_variation);
-            mImageVariation = itemView.findViewById(R.id.image_variation);
-        }
-    }
-
 
     public ValuesListAdapter (int[] date, float[] value){
         this.date = date;
@@ -47,9 +30,7 @@ public class ValuesListAdapter extends RecyclerView.Adapter<ValuesListAdapter.My
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v =  LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.values_list_item,viewGroup,false);
 
-        MyViewHolder vh = new MyViewHolder(v);
-
-        return vh;
+        return new MyViewHolder(v);
     }
 
     @Override
@@ -100,6 +81,21 @@ public class ValuesListAdapter extends RecyclerView.Adapter<ValuesListAdapter.My
             return 0;
         }else {
             return date.length;
+        }
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder  {
+        TextView mTextViewDate;
+        TextView mTextViewValue;
+        TextView mTextViewVariation;
+        ImageView mImageVariation;
+
+        MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mTextViewDate = itemView.findViewById(R.id.list_item_date);
+            mTextViewValue = itemView.findViewById(R.id.list_item_value);
+            mTextViewVariation = itemView.findViewById(R.id.list_item_variation);
+            mImageVariation = itemView.findViewById(R.id.image_variation);
         }
     }
 }

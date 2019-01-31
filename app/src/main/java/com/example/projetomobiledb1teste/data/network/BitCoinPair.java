@@ -1,4 +1,4 @@
-package com.example.projetomobiledb1teste;
+package com.example.projetomobiledb1teste.data.network;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -28,6 +28,4 @@ public class BitCoinPair {
         this.date = date;
         this.value = value;
     }
-
-
 }

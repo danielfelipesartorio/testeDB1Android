@@ -1,4 +1,4 @@
-package com.example.projetomobiledb1teste;
+package com.example.projetomobiledb1teste.ui;
 
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;

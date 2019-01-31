@@ -1,8 +1,8 @@
-package com.example.projetomobiledb1teste.utilities;
+package com.example.projetomobiledb1teste.data.db;
 
 import android.provider.BaseColumns;
 
-public class BitCoinContract {
+public class BitCoinDBContract {
 
     public static final class bitCoinEntry implements BaseColumns{
         public static final String TABLE_NAME = "bitCoin";

@@ -1,4 +1,6 @@
-package com.example.projetomobiledb1teste;
+package com.example.projetomobiledb1teste.data.network;
+
+import com.example.projetomobiledb1teste.data.network.BitCoinPairList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

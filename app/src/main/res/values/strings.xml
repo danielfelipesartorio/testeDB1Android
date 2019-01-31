@@ -7,4 +7,5 @@
     <string name="main_card_date">Data: —/—/—</string>
     <string name="error_msg_1">Sem conexão com a internet.</string>
     <string name="error_msg_2">Tente novamente mais tarde</string>
+    <string name="null_msg">Null</string>
 </resources>
