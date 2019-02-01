@@ -24,64 +24,15 @@ public class BitCoinData {
     private DbHelper dbHelper;
     private CallbackInterface callback;
     private Context appContext;
-    private int[] dia;
-    private float[] valor;
 
     public float[] getValueFromDB(){
-        if (valor ==null){
-            dbHelper = DbHelper.getInstance(appContext);
-            mDBData= dbHelper.getReadableDatabase();
-            Cursor cursor = mDBData.query(BitCoinDBContract.BitCoinEntry.TABLE_NAME,
-                    new String[] {BitCoinDBContract.BitCoinEntry.COLUMN_VALOR},
-                    null,
-                    null,
-                    null,
-                    null,null);
-            int size = cursor.getCount();
-            valor = new float[size];
-            cursor.moveToFirst();
-
-            for (int i=0;i<size;i++){
-                valor[i] = cursor.getFloat(cursor.getColumnIndex(BitCoinDBContract.BitCoinEntry.COLUMN_VALOR));
-                cursor.moveToNext();
-            }
-            cursor.close();
-        }
-        return valor;
+        dbHelper = DbHelper.getInstance(appContext);
+        return dbHelper.getValueFromDB();
     }
 
     public int[] getDateFromDB(){
-        if (dia ==null){
-            dbHelper = DbHelper.getInstance(appContext);
-            mDBData= dbHelper.getReadableDatabase();
-            Cursor cursor = mDBData.query(BitCoinDBContract.BitCoinEntry.TABLE_NAME,
-                    new String[] {BitCoinDBContract.BitCoinEntry.COLUMN_DATA},
-                    null,
-                    null,
-                    null,
-                    null,null);
-            int size = cursor.getCount();
-            dia = new int[size];
-            cursor.moveToFirst();
-
-            for (int i=0;i<size;i++){
-                dia[i] = cursor.getInt(cursor.getColumnIndex(BitCoinDBContract.BitCoinEntry.COLUMN_DATA));
-                cursor.moveToNext();
-            }
-            cursor.close();
-        }
-        return dia;}
-
-    public void droptable(){
         dbHelper = DbHelper.getInstance(appContext);
-        mDBData = dbHelper.getWritableDatabase();
-        mDBData.execSQL("DROP TABLE IF EXISTS " + BitCoinDBContract.BitCoinEntry.TABLE_NAME + ";");
-        final String SQL_CREATE_TABLE = "CREATE TABLE " +
-                BitCoinDBContract.BitCoinEntry.TABLE_NAME + " ("+
-                BitCoinDBContract.BitCoinEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                BitCoinDBContract.BitCoinEntry.COLUMN_DATA + " INTEGER NOT NULL," +
-                BitCoinDBContract.BitCoinEntry.COLUMN_VALOR + " REAL NOT NULL" + ");";
-        mDBData.execSQL(SQL_CREATE_TABLE);
+        return dbHelper.getDateFromDB();
     }
 
     public void getDataFromAPIUsingRetrofit(Context appContext, CallbackInterface callbackInterface){
@@ -103,13 +54,13 @@ public class BitCoinData {
                 callback.callback(false);
             }
         });
-
     }
     private void generateDataBase(ArrayList<BitCoinPair> bitCoinPairArrayList){
         int date;
         float value;
 
         dbHelper = DbHelper.getInstance(appContext);
+        dbHelper.droptable();
         mDBData= dbHelper.getWritableDatabase();
 
         Cursor cursor = mDBData.rawQuery("SELECT * FROM " + BitCoinDBContract.BitCoinEntry.TABLE_NAME, null);
@@ -126,6 +77,4 @@ public class BitCoinData {
         }
         cursor.close();
     }
-
 }
-

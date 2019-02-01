@@ -15,7 +15,7 @@ public class MainActivityPresenter implements CallbackInterface {
         this.bitCoinData = new BitCoinData();
     }
 
-    public void pegaDados (){
+    public void updateDataFromSource(){
         bitCoinData.getDataFromAPIUsingRetrofit(MainActivity.getContext(), this);
     }
 
@@ -39,7 +39,6 @@ public class MainActivityPresenter implements CallbackInterface {
 
 
     public void refresh(){
-        bitCoinData.droptable();
         bitCoinData.getDataFromAPIUsingRetrofit(MainActivity.getContext(), this);
     }
 

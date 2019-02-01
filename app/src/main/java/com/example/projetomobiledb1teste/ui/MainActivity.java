@@ -7,13 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
 
 import android.view.View;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.projetomobiledb1teste.R;
+import com.example.projetomobiledb1teste.data.utils.TextFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.LabelFormatter;
@@ -24,11 +25,8 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.OnDataPointTapListener;
 import com.jjoe64.graphview.series.Series;
 
-import java.text.DecimalFormat;
-import java.util.Date;
-
 public class MainActivity extends AppCompatActivity implements MainActivityInterface {
-    private static final String DATE_FORMAT = "dd/MM/yyyy";
+
     private static Context context;
     public GraphView grafico;
     public TextView mTextViewMainCardDate;
@@ -38,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     private RecyclerView.Adapter mValuesListAdapter;
     private RecyclerView.LayoutManager mValuesListLayoutManager;
     private SwipeRefreshLayout mSwipeRefresh;
+    private TextFormatter textFormatter;
 
     public static Context getContext(){
         return context;
@@ -48,13 +47,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        textFormatter = TextFormatter.getInstance();
+
         context = getApplicationContext();
 
         mTextViewMainCardDate = findViewById(R.id.card_principal_data);
         mTextViewMainCardValue = findViewById(R.id.card_principal_valor);
         grafico = findViewById(R.id.grafico);
         mValuesList = findViewById(R.id.values_list);
-
 
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -70,15 +70,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                 presenter.refresh();
             }
         });
-
         presenter = new MainActivityPresenter(this);
-        presenter.pegaDados();
+        presenter.updateDataFromSource();
     }
 
     @Override
     public void updateScreen(int[] data, float[] valor, LineGraphSeries<DataPoint> dataPoint) {
-        final String DOLAR_FORMAT = "US$#.00";
-        final DecimalFormat df = new DecimalFormat(DOLAR_FORMAT);
         int dataSize = data.length;
 
         //Atualização da lista
@@ -91,20 +88,21 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         //String cardPrincipalText ="Data: "+DateFormat.format(DATE_FORMAT,new Date ((long)data[dataSize-1]*1000));
         mTextViewMainCardDate.setText(getResources()
                 .getString(R.string.main_card_date,
-                        DateFormat.format(DATE_FORMAT,new Date ((long)data[dataSize-1]*1000))));
+                       textFormatter.FormatDate(data[dataSize-1])));
         //String cardPrincipalValue = "Valor do BitCoin: "+df.format(valor[dataSize-1]);
         mTextViewMainCardValue.setText(getResources()
                 .getString(R.string.main_card_value,
-                        df.format(valor[dataSize-1])));
+                        textFormatter.FormatPrice(valor[dataSize-1])));
+
         //Atualização do grafico
         //label dos eixos
         LabelFormatter mLabelFormater = new LabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {
                 if (isValueX){
-                    return ""+ DateFormat.format(DATE_FORMAT,new Date((long)value*1000));
+                    return TextFormatter.getInstance().FormatDate((int) value);
                 }else{
-                    return ""+df.format(value);
+                    return TextFormatter.getInstance().FormatPrice((float)value);
                 }
             }
             @Override
@@ -116,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         mGrid.setLabelFormatter(mLabelFormater);
         mGrid.setHumanRounding(false,true);
         mGrid.setHorizontalLabelsAngle(135);
-        mGrid.setNumVerticalLabels(9);
+        //mGrid.setNumVerticalLabels(9);
         mGrid.setNumHorizontalLabels(11);
         mGrid.setGridStyle(GridLabelRenderer.GridStyle.HORIZONTAL);
         mGrid.setHorizontalLabelsVisible(false);
@@ -140,11 +138,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         //dataPoint.setDrawDataPoints(true);
         //dataPoint.setDataPointsRadius(6);
         dataPoint.setThickness(5);
-
         dataPoint.setOnDataPointTapListener(new OnDataPointTapListener() {
             @Override
             public void onTap(Series series, DataPointInterface dataPoint) {
-                String toastText = "" + DateFormat.format(DATE_FORMAT,new Date ((long)dataPoint.getX()*1000))+": " + df.format(dataPoint.getY());
+                String toastText = "" + textFormatter.FormatDate((int) dataPoint.getX())+": " + textFormatter.FormatPrice((float) dataPoint.getY());
                 Toast.makeText(MainActivity.this, toastText, Toast.LENGTH_LONG).show();
             }
         });

@@ -53,7 +53,7 @@
                             android:id="@+id/grafico"
                             android:layout_width="match_parent"
                             android:layout_height="200dp"
-                            android:layout_marginBottom="8dp"
+                            android:layout_marginBottom="24dp"
                             android:visibility="gone"/>
             </LinearLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
