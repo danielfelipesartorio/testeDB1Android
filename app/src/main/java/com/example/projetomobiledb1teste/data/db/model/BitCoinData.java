@@ -31,8 +31,8 @@ public class BitCoinData {
         if (valor ==null){
             dbHelper = DbHelper.getInstance(appContext);
             mDBData= dbHelper.getReadableDatabase();
-            Cursor cursor = mDBData.query(BitCoinDBContract.bitCoinEntry.TABLE_NAME,
-                    new String[] {BitCoinDBContract.bitCoinEntry.COLUMN_VALOR},
+            Cursor cursor = mDBData.query(BitCoinDBContract.BitCoinEntry.TABLE_NAME,
+                    new String[] {BitCoinDBContract.BitCoinEntry.COLUMN_VALOR},
                     null,
                     null,
                     null,
@@ -42,7 +42,7 @@ public class BitCoinData {
             cursor.moveToFirst();
 
             for (int i=0;i<size;i++){
-                valor[i] = cursor.getFloat(cursor.getColumnIndex(BitCoinDBContract.bitCoinEntry.COLUMN_VALOR));
+                valor[i] = cursor.getFloat(cursor.getColumnIndex(BitCoinDBContract.BitCoinEntry.COLUMN_VALOR));
                 cursor.moveToNext();
             }
             cursor.close();
@@ -54,8 +54,8 @@ public class BitCoinData {
         if (dia ==null){
             dbHelper = DbHelper.getInstance(appContext);
             mDBData= dbHelper.getReadableDatabase();
-            Cursor cursor = mDBData.query(BitCoinDBContract.bitCoinEntry.TABLE_NAME,
-                    new String[] {BitCoinDBContract.bitCoinEntry.COLUMN_DATA},
+            Cursor cursor = mDBData.query(BitCoinDBContract.BitCoinEntry.TABLE_NAME,
+                    new String[] {BitCoinDBContract.BitCoinEntry.COLUMN_DATA},
                     null,
                     null,
                     null,
@@ -65,7 +65,7 @@ public class BitCoinData {
             cursor.moveToFirst();
 
             for (int i=0;i<size;i++){
-                dia[i] = cursor.getInt(cursor.getColumnIndex(BitCoinDBContract.bitCoinEntry.COLUMN_DATA));
+                dia[i] = cursor.getInt(cursor.getColumnIndex(BitCoinDBContract.BitCoinEntry.COLUMN_DATA));
                 cursor.moveToNext();
             }
             cursor.close();
@@ -75,12 +75,12 @@ public class BitCoinData {
     public void droptable(){
         dbHelper = DbHelper.getInstance(appContext);
         mDBData = dbHelper.getWritableDatabase();
-        mDBData.execSQL("DROP TABLE IF EXISTS " + BitCoinDBContract.bitCoinEntry.TABLE_NAME + ";");
+        mDBData.execSQL("DROP TABLE IF EXISTS " + BitCoinDBContract.BitCoinEntry.TABLE_NAME + ";");
         final String SQL_CREATE_TABLE = "CREATE TABLE " +
-                BitCoinDBContract.bitCoinEntry.TABLE_NAME + " ("+
-                BitCoinDBContract.bitCoinEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                BitCoinDBContract.bitCoinEntry.COLUMN_DATA + " INTEGER NOT NULL," +
-                BitCoinDBContract.bitCoinEntry.COLUMN_VALOR + " REAL NOT NULL" + ");";
+                BitCoinDBContract.BitCoinEntry.TABLE_NAME + " ("+
+                BitCoinDBContract.BitCoinEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                BitCoinDBContract.BitCoinEntry.COLUMN_DATA + " INTEGER NOT NULL," +
+                BitCoinDBContract.BitCoinEntry.COLUMN_VALOR + " REAL NOT NULL" + ");";
         mDBData.execSQL(SQL_CREATE_TABLE);
     }
 
@@ -112,16 +112,16 @@ public class BitCoinData {
         dbHelper = DbHelper.getInstance(appContext);
         mDBData= dbHelper.getWritableDatabase();
 
-        Cursor cursor = mDBData.rawQuery("SELECT * FROM " + BitCoinDBContract.bitCoinEntry.TABLE_NAME, null);
+        Cursor cursor = mDBData.rawQuery("SELECT * FROM " + BitCoinDBContract.BitCoinEntry.TABLE_NAME, null);
         if (!cursor.moveToFirst()){
             int tam = bitCoinPairArrayList.size();
             for (int count= 0;count<tam;count++) {
                 date = bitCoinPairArrayList.get(count).getDate();
                 value = bitCoinPairArrayList.get(count).getValue();
                 ContentValues cv = new ContentValues();
-                cv.put(BitCoinDBContract.bitCoinEntry.COLUMN_DATA,date);
-                cv.put(BitCoinDBContract.bitCoinEntry.COLUMN_VALOR,value);
-                mDBData.insert(BitCoinDBContract.bitCoinEntry.TABLE_NAME,null,cv);
+                cv.put(BitCoinDBContract.BitCoinEntry.COLUMN_DATA,date);
+                cv.put(BitCoinDBContract.BitCoinEntry.COLUMN_VALOR,value);
+                mDBData.insert(BitCoinDBContract.BitCoinEntry.TABLE_NAME,null,cv);
             }
         }
         cursor.close();

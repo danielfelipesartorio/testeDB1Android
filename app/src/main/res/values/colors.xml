@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#4CAF50</color>
-    <color name="colorPrimaryDark">#388E3C</color>
+    <color name="colorPrimary">#1b2f45</color>
+    <color name="colorPrimaryDark">#0c2036</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="backgroundColor">#5C5C5C</color>
     <color name="black">#000000</color>
+
+
+    <color name="dribbleBlue1">#147AA7</color>
+    <color name="dribbleBlue2">#ABD7D9</color>
+    <color name="dribbleBlue3">#303957</color>
+    <color name="dribbleBlue4">#586093</color>
+    <color name="dribbleBlue5">#2B2F50</color>
+    <color name="dribbleBlue6">#0B0F1E</color>
+
+
 </resources>

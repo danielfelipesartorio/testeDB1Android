@@ -2,6 +2,7 @@ package com.example.projetomobiledb1teste.ui;
 
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -43,7 +44,7 @@ public class ValuesListAdapter extends RecyclerView.Adapter<ValuesListAdapter.My
         int j = size-i-1;
 
         if (i < size-1) {
-            temp = (1 - (value[j-1] / value[j]));
+            temp = ((value[j] / value[j-1])-1);
 
         } else {
             temp = 0;
@@ -64,14 +65,17 @@ public class ValuesListAdapter extends RecyclerView.Adapter<ValuesListAdapter.My
         myViewHolder.mTextViewVariation.setText(formatedVariation);
 
         if(temp==0){
-             myViewHolder.mImageVariation.setImageResource(R.drawable.ic_neutral);
+            myViewHolder.mImageVariation.setImageResource(R.drawable.ic_neutral);
             myViewHolder.mTextViewVariation.setTextColor(Color.WHITE);
+            myViewHolder.mImageVariation.setColorFilter(Color.WHITE);
         }else if (temp>0){
             myViewHolder.mImageVariation.setImageResource(R.drawable.ic_up);
-            myViewHolder.mTextViewVariation.setTextColor(Color.GREEN);
+            myViewHolder.mTextViewVariation.setTextColor(0xFF3AECFC);
+            myViewHolder.mImageVariation.setColorFilter(0xFF3AECFC);
         }else if (temp<0){
             myViewHolder.mImageVariation.setImageResource(R.drawable.ic_down);
-            myViewHolder.mTextViewVariation.setTextColor(Color.RED);
+            myViewHolder.mTextViewVariation.setTextColor(0xFFFF5280);
+            myViewHolder.mImageVariation.setColorFilter(0xFFFF5280);
         }
     }
 

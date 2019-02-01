@@ -23,17 +23,17 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String SQL_CREATE_TABLE = "CREATE TABLE " +
-                BitCoinDBContract.bitCoinEntry.TABLE_NAME + " ("+
-                BitCoinDBContract.bitCoinEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                BitCoinDBContract.bitCoinEntry.COLUMN_DATA + " INTEGER NOT NULL," +
-                BitCoinDBContract.bitCoinEntry.COLUMN_VALOR + " REAL NOT NULL" + ");";
+                BitCoinDBContract.BitCoinEntry.TABLE_NAME + " ("+
+                BitCoinDBContract.BitCoinEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                BitCoinDBContract.BitCoinEntry.COLUMN_DATA + " INTEGER NOT NULL," +
+                BitCoinDBContract.BitCoinEntry.COLUMN_VALOR + " REAL NOT NULL" + ");";
 
         db.execSQL(SQL_CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS "+ BitCoinDBContract.bitCoinEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS "+ BitCoinDBContract.BitCoinEntry.TABLE_NAME);
         onCreate(db);
     }
 }

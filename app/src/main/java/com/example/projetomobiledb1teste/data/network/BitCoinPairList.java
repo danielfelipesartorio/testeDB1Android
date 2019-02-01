@@ -1,6 +1,5 @@
 package com.example.projetomobiledb1teste.data.network;
 
-import com.example.projetomobiledb1teste.data.network.BitCoinPair;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;

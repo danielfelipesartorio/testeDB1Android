@@ -11,6 +11,7 @@ import android.text.format.DateFormat;
 
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.projetomobiledb1teste.R;
 import com.jjoe64.graphview.GraphView;
@@ -18,13 +19,16 @@ import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.LabelFormatter;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.Series;
 
 import java.text.DecimalFormat;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements MVPInterfaces.MainActivityInterface {
-    private static final String formatoData = "dd/MM/yyyy";
+public class MainActivity extends AppCompatActivity implements MainActivityInterface {
+    private static final String DATE_FORMAT = "dd/MM/yyyy";
     private static Context context;
     public GraphView grafico;
     public TextView mTextViewMainCardDate;
@@ -73,8 +77,8 @@ public class MainActivity extends AppCompatActivity implements MVPInterfaces.Mai
 
     @Override
     public void updateScreen(int[] data, float[] valor, LineGraphSeries<DataPoint> dataPoint) {
-        final String dolarFormat = "US$#.00";
-        final DecimalFormat df = new DecimalFormat(dolarFormat);
+        final String DOLAR_FORMAT = "US$#.00";
+        final DecimalFormat df = new DecimalFormat(DOLAR_FORMAT);
         int dataSize = data.length;
 
         //Atualização da lista
@@ -84,18 +88,21 @@ public class MainActivity extends AppCompatActivity implements MVPInterfaces.Mai
         mValuesList.setAdapter(mValuesListAdapter);
 
         //Atualização do card principal
-        String cardPrincipalText ="Data: "+DateFormat.format(formatoData,new Date ((long)data[dataSize-1]*1000));
-        mTextViewMainCardDate.setText(cardPrincipalText);
-        String cardPrincipalValue = "Valor do BitCoin: "+df.format(valor[dataSize-1]);
-        mTextViewMainCardValue.setText(cardPrincipalValue);
-
+        //String cardPrincipalText ="Data: "+DateFormat.format(DATE_FORMAT,new Date ((long)data[dataSize-1]*1000));
+        mTextViewMainCardDate.setText(getResources()
+                .getString(R.string.main_card_date,
+                        DateFormat.format(DATE_FORMAT,new Date ((long)data[dataSize-1]*1000))));
+        //String cardPrincipalValue = "Valor do BitCoin: "+df.format(valor[dataSize-1]);
+        mTextViewMainCardValue.setText(getResources()
+                .getString(R.string.main_card_value,
+                        df.format(valor[dataSize-1])));
         //Atualização do grafico
         //label dos eixos
         LabelFormatter mLabelFormater = new LabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {
                 if (isValueX){
-                    return ""+ DateFormat.format(formatoData,new Date((long)value*1000));
+                    return ""+ DateFormat.format(DATE_FORMAT,new Date((long)value*1000));
                 }else{
                     return ""+df.format(value);
                 }
@@ -109,8 +116,10 @@ public class MainActivity extends AppCompatActivity implements MVPInterfaces.Mai
         mGrid.setLabelFormatter(mLabelFormater);
         mGrid.setHumanRounding(false,true);
         mGrid.setHorizontalLabelsAngle(135);
-        mGrid.setNumVerticalLabels(8);
+        mGrid.setNumVerticalLabels(9);
         mGrid.setNumHorizontalLabels(11);
+        mGrid.setGridStyle(GridLabelRenderer.GridStyle.HORIZONTAL);
+        mGrid.setHorizontalLabelsVisible(false);
 
         grafico.getViewport().setXAxisBoundsManual(true);
         grafico.getViewport().setMaxX(dataPoint.getHighestValueX());
@@ -122,13 +131,23 @@ public class MainActivity extends AppCompatActivity implements MVPInterfaces.Mai
         //Formatação da linha
         float var = valor[dataSize-1]/valor[dataSize-2];
         if (var>1){
-            dataPoint.setColor(Color.GREEN);
+            dataPoint.setColor(0xFF3AECFC);
         }else if (var<1){
-            dataPoint.setColor(Color.RED);
+            dataPoint.setColor(0xFFB8110B);
         }else{
             dataPoint.setColor(Color.WHITE);
         }
-        dataPoint.setDrawDataPoints(true);
+        //dataPoint.setDrawDataPoints(true);
+        //dataPoint.setDataPointsRadius(6);
+        dataPoint.setThickness(5);
+
+        dataPoint.setOnDataPointTapListener(new OnDataPointTapListener() {
+            @Override
+            public void onTap(Series series, DataPointInterface dataPoint) {
+                String toastText = "" + DateFormat.format(DATE_FORMAT,new Date ((long)dataPoint.getX()*1000))+": " + df.format(dataPoint.getY());
+                Toast.makeText(MainActivity.this, toastText, Toast.LENGTH_LONG).show();
+            }
+        });
 
     }
 

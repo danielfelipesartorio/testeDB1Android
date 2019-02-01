@@ -3,8 +3,8 @@
     <string name="refresh">Refresh</string>
     <string name="graph_title">Cotação dos ultimo 30 dias</string>
     <string name="wait_message">Por favor \n aguarde</string>
-    <string name="main_card_value">Valor do BitCoin: US$####.##</string>
-    <string name="main_card_date">Data: —/—/—</string>
+    <string name="main_card_value">Valor do BitCoin: %1$s</string>
+    <string name="main_card_date">Data: %1$s</string>
     <string name="error_msg_1">Sem conexão com a internet.</string>
     <string name="error_msg_2">Tente novamente mais tarde</string>
     <string name="null_msg">Null</string>

@@ -8,9 +8,9 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 public class MainActivityPresenter implements CallbackInterface {
     private BitCoinData bitCoinData;
-    private MVPInterfaces.MainActivityInterface contrato;
+    private MainActivityInterface contrato;
 
-    public MainActivityPresenter(MVPInterfaces.MainActivityInterface contrato){
+    public MainActivityPresenter(MainActivityInterface contrato){
         this.contrato = contrato;
         this.bitCoinData = new BitCoinData();
     }
