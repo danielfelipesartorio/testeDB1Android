@@ -1,6 +1,8 @@
 package com.example.projetomobiledb1teste.data.network;
 
 import retrofit2.Retrofit;
+
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitInstanceBitCoin {
@@ -12,6 +14,7 @@ public class RetrofitInstanceBitCoin {
         //Retirado pois causava: java.net.SocketTimeoutException: timeout \\Dead socket
         //if (retrofit ==null){
             retrofit = new retrofit2.Retrofit.Builder()
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();

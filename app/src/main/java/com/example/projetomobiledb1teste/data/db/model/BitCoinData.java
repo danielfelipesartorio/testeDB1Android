@@ -15,6 +15,12 @@ import com.example.projetomobiledb1teste.data.network.RetrofitInstanceBitCoin;
 
 import java.util.ArrayList;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,20 +46,49 @@ public class BitCoinData {
         callback = callbackInterface;
         final GetBitCoinDataService bitCoinDataService = RetrofitInstanceBitCoin.getRetrofitInstance().create(GetBitCoinDataService.class);
 
-        Call<BitCoinPairList> call = bitCoinDataService.getBitCoinData();
+        Observable<BitCoinPairList> observable = bitCoinDataService.getBitCoinData();
 
-        call.enqueue(new Callback<BitCoinPairList>() {
+        observable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<BitCoinPairList>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(BitCoinPairList bitCoinPairList) {
+                generateDataBase(bitCoinPairList.getBitCoinPairList());
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callback.callback(false);
+            }
+
+            @Override
+            public void onComplete() {
+                callback.callback(true);
+            }
+        });
+
+
+
+
+
+/*        call.enqueue(new Callback<BitCoinPairList>() {
             @Override
             public void onResponse(Call<BitCoinPairList> call, Response<BitCoinPairList> response) {
-                generateDataBase(response.body().getBitCoinPairList());
-                callback.callback(true);
+
             }
 
             @Override
             public void onFailure(Call<BitCoinPairList> call, Throwable t) {
-                callback.callback(false);
+
             }
-        });
+        });*/
     }
     private void generateDataBase(ArrayList<BitCoinPair> bitCoinPairArrayList){
         int date;
