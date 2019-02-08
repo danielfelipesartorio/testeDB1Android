@@ -23,18 +23,13 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        final String SQL_CREATE_TABLE = "CREATE TABLE " +
-                BitCoinDBContract.BitCoinEntry.TABLE_NAME + " ("+
-                BitCoinDBContract.BitCoinEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                BitCoinDBContract.BitCoinEntry.COLUMN_DATA + " INTEGER NOT NULL," +
-                BitCoinDBContract.BitCoinEntry.COLUMN_VALOR + " REAL NOT NULL" + ");";
-        db.execSQL(SQL_CREATE_TABLE);
+        createTable(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS "+ BitCoinDBContract.BitCoinEntry.TABLE_NAME);
-        onCreate(db);
+        dropTable(db);
+        createTable(db);
     }
 
     public float[] getValueFromDB(){
@@ -80,14 +75,17 @@ public class DbHelper extends SQLiteOpenHelper {
         return dia;
     }
 
-        public void droptable(){
-            SQLiteDatabase mDBData = mInstance.getWritableDatabase();
-            mDBData.execSQL("DROP TABLE IF EXISTS " + BitCoinDBContract.BitCoinEntry.TABLE_NAME + ";");
-            final String SQL_CREATE_TABLE = "CREATE TABLE " +
-                    BitCoinDBContract.BitCoinEntry.TABLE_NAME + " ("+
-                    BitCoinDBContract.BitCoinEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    BitCoinDBContract.BitCoinEntry.COLUMN_DATA + " INTEGER NOT NULL," +
-                    BitCoinDBContract.BitCoinEntry.COLUMN_VALOR + " REAL NOT NULL" + ");";
-            mDBData.execSQL(SQL_CREATE_TABLE);
-        }
+    public void dropTable(SQLiteDatabase db){
+        db.execSQL("DROP TABLE IF EXISTS " + BitCoinDBContract.BitCoinEntry.TABLE_NAME + ";");
+    }
+
+    public void createTable(SQLiteDatabase db) {
+        final String SQL_CREATE_TABLE = "CREATE TABLE " +
+                BitCoinDBContract.BitCoinEntry.TABLE_NAME + " ("+
+                BitCoinDBContract.BitCoinEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                BitCoinDBContract.BitCoinEntry.COLUMN_DATA + " INTEGER NOT NULL," +
+                BitCoinDBContract.BitCoinEntry.COLUMN_VALOR + " REAL NOT NULL" + ");";
+        db.execSQL(SQL_CREATE_TABLE);
+    }
+
 }

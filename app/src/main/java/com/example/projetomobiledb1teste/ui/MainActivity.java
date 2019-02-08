@@ -60,18 +60,38 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mTextViewMainCardDate.setText("");
-                mTextViewMainCardValue.setText("");
-                mValuesListLayoutManager = new LinearLayoutManager(MainActivity.this);
-                mValuesList.setLayoutManager(mValuesListLayoutManager);
-                mValuesListAdapter = new ValuesListAdapter(null,null);
-                mValuesList.setAdapter(mValuesListAdapter);
-                grafico.removeAllSeries();
-                presenter.refresh();
+                refreshView();
             }
         });
         presenter = new MainActivityPresenter(this);
+    }
+
+    private void refreshView() {
+        mTextViewMainCardDate.setText("");
+        mTextViewMainCardValue.setText("");
+        mValuesListLayoutManager = new LinearLayoutManager(MainActivity.this);
+        mValuesList.setLayoutManager(mValuesListLayoutManager);
+        mValuesListAdapter = new ValuesListAdapter(null,null);
+        mValuesList.setAdapter(mValuesListAdapter);
+        grafico.removeAllSeries();
         presenter.updateDataFromSource();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (presenter != null) {
+            mSwipeRefresh.setRefreshing(true);
+            presenter.updateDataFromSource();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (presenter != null) {
+            presenter.clear();
+        }
     }
 
     @Override
